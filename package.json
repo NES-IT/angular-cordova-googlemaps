@@ -1,0 +1,32 @@
+{
+  "name": "angular-cordova-googlemaps",
+  "version": "0.0.1",
+  "description": "A tiny wrapper on https://github.com/mapsplugin/cordova-plugin-googlemaps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NewEasySoft/angular-cordova-googlemaps.git"
+  },
+  "keywords": [
+    "cordova",
+    "angular",
+    "ionic",
+    "googlemaps",
+    "native"
+  ],
+  "author": "sviluppo@easysoft.me",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NewEasySoft/angular-cordova-googlemaps/issues"
+  },
+  "homepage": "https://github.com/NewEasySoft/angular-cordova-googlemaps#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-uglify": "^0.11.1"
+  }
+}

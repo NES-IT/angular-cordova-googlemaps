@@ -1,0 +1,25 @@
+{
+  "name": "nes-angular-cordova-googlemaps",
+  "description": "A tiny wrapper on https://github.com/mapsplugin/cordova-plugin-googlemaps",
+  "main": "src/googleMaps.js",
+  "authors": [
+    "sviluppo@easysoft.me"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "cordova",
+    "angular",
+    "ionic",
+    "googlemaps",
+    "native"
+  ],
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
