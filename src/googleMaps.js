@@ -57,8 +57,8 @@
       map.isAvailable(function() {
         map.addMarker(markerOptions, function (marker){
 
-          if (markerOptions.onclick) {
-            marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, markerOptions.onclick);
+          if (markerOptions.onClick) {
+            marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, markerOptions.onClick);
           }
 
         });
@@ -89,6 +89,7 @@
      * @private
      */
     function _create(domSelector, options) {
+      var deferredCreation = $q.defer();
 
       var mapInDom = document.getElementById(domSelector);
       if(!mapInDom) {
@@ -114,42 +115,58 @@
         _options.controls = controlsOptions;
       }
 
-      var _map = null;
-
       try {
 
-        _map = plugin.google.maps.Map.getMap(mapInDom, _options);
+        var map = plugin.google.maps.Map.getMap(mapInDom, _options);
+
+        map.on(plugin.google.maps.event.MAP_READY, function (map) {
+
+          if (options.onClick) {
+            map.on(plugin.google.maps.event.MAP_CLICK, options.onClick);
+          }
+
+          if (options.onCameraChange) {
+            map.on(plugin.google.maps.event.CAMERA_CHANGE, options.onCameraChange);
+          }
+
+          var mapApi = {
+            center: function (lat, lng, zoom) {
+              var moveOptions = {
+                'target': _position(lat, lng)
+              };
+
+              if (angular.isDefined(zoom)) {
+                moveOptions.zoom = zoom;
+              }
+
+              map.moveCamera(moveOptions);
+            },
+            addMarker: function (markerOptions) {
+              return _addMarker(map, markerOptions);
+            },
+            addMarkers: function (markersOptions) {
+              angular.forEach(markersOptions, function(markerOptions) {
+                _addMarker(map, markerOptions);
+              });
+            },
+            drawPath: function (points, color, width) {
+              return _drawPath(map, points, color, width);
+            },
+            destroy: function () {
+              map.remove();
+            }
+          };
+
+          deferredCreation.resolve(mapApi);
+
+        });
 
       }
       catch(exception) {
-        throw 'cordova-plugin-googlemaps is not available!';
+        deferredCreation.reject('cordova-plugin-googlemaps is not available!');
       }
 
-      return {
-        center: function (lat, lng, zoom) {
-          var moveOptions = {
-            'target': _position(lat, lng)
-          };
-
-          if (angular.isDefined(zoom)) {
-            moveOptions.zoom = zoom;
-          }
-
-          _map.moveCamera(moveOptions);
-        },
-        addMarker: function (markerOptions) {
-          return _addMarker(_map, markerOptions);
-        },
-        addMarkers: function (markersOptions) {
-          var map = _map;
-          angular.forEach(markersOptions, function(markerOptions) {
-            _addMarker(map, markerOptions);
-          });
-        },
-        drawPath: function (points, color, width) {
-          return _drawPath(_map, points, color, width);
-        }
-      };
+      return deferredCreation.promise;
     }
 
     return {
