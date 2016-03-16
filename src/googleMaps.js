@@ -10,14 +10,17 @@
 
 
   try {
-    angular.module('nes.googleMaps');
+    angular
+        .module('nes.googleMaps');
   } catch (exception) {
-    angular.module('nes.googleMaps', []);
+    angular
+        .module('nes.googleMaps', []);
   }
 
 
-  angular.module('nes.googleMaps')
-    .service('$googleMaps', ['$q', NesGoogleMaps]);
+  angular
+      .module('nes.googleMaps')
+      .service('$googleMaps', ['$q', NesGoogleMaps]);
 
   /**
    *
@@ -77,39 +80,55 @@
      * @returns {{_map: null, dropMarker: dropMarker, drawPath: drawPath}}
      * @private
      */
-    function _create(domSelector, position, zoom) {
+    function _create(domSelector, options) {
 
       var mapInDom = document.getElementById(domSelector);
       if(!mapInDom) {
         throw 'domSelector does not match any element id in the dom!';
       }
 
+      var _options = {};
+
+      var initialPosition = options.position;
+      if (initialPosition) {
+        _options.camera = {
+          latLng: _position(initialPosition.lat, initialPosition.lon)
+        };
+      }
+      var initialZoom = options.zoom;
+      if (initialZoom) {
+        _options.camera = _options.camera || {};
+        _options.zoom = initialZoom;
+      }
+
+      var controlsOptions = options.controls;
+      if (controlsOptions) {
+        _options.controls = controlsOptions;
+      }
+
+      var _map = null;
+
       try {
-        plugin.google.maps
-      } catch(exception) {
-        throw 'cordova-plugin-googlemaps is not available!'
+
+        _map = plugin.google.maps.Map.getMap(mapInDom, internalOptions);
+
+      }
+      catch(exception) {
+        throw 'cordova-plugin-googlemaps is not available!';
       }
 
       return {
-        _map: plugin.google.maps.Map.getMap(mapInDom, {
-          camera: {
-            latLng: _position(position.lat, position.lon)
-          },
-          zoom: zoom
-        }),
         addMarker: function (markerOptions) {
-          return _addMarker(this._map, markerOptions);
+          return _addMarker(_map, markerOptions);
         },
         addMarkers: function (markersOptions) {
-          var deferred = $q.defer();
-          var map = this._map;
+          var map = _map;
           angular.forEach(markersOptions, function(markerOptions) {
             _addMarker(map, markerOptions);
           });
-          return deferred.promise;
         },
         drawPath: function (points, color, width) {
-          return _drawPath(this._map, points, color, width);
+          return _drawPath(_map, points, color, width);
         }
       };
     }
