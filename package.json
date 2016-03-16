@@ -1,6 +1,6 @@
 {
   "name": "angular-cordova-googlemaps",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A tiny wrapper on https://github.com/mapsplugin/cordova-plugin-googlemaps",
   "main": "index.js",
   "scripts": {
