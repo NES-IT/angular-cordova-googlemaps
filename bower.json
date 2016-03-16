@@ -1,5 +1,6 @@
 {
   "name": "nes-angular-cordova-googlemaps",
+  "version": "0.0.1",
   "description": "A tiny wrapper on https://github.com/mapsplugin/cordova-plugin-googlemaps",
   "main": "src/googleMaps.js",
   "authors": [
