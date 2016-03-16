@@ -45,7 +45,7 @@
    * @param $q
    * @returns {{create: _create}}
    * @constructor
-     */
+   */
   function NesGoogleMaps($q) {
 
     function _position(lat, lng) {
@@ -53,9 +53,17 @@
     }
 
     function _addMarker(map, markerOptions) {
+
       map.isAvailable(function() {
-        map.addMarker(markerOptions);
+        map.addMarker(markerOptions, function (marker){
+
+          if (markerOptions.onclick) {
+            marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, markerOptions.onclick);
+          }
+
+        });
       });
+
     }
 
     function _drawPath(map, points, color, width) {
@@ -110,7 +118,7 @@
 
       try {
 
-        _map = plugin.google.maps.Map.getMap(mapInDom, internalOptions);
+        _map = plugin.google.maps.Map.getMap(mapInDom, _options);
 
       }
       catch(exception) {
@@ -118,6 +126,17 @@
       }
 
       return {
+        center: function (lat, lng, zoom) {
+          var moveOptions = {
+            'target': _position(lat, lng)
+          };
+
+          if (angular.isDefined(zoom)) {
+            moveOptions.zoom = zoom;
+          }
+
+          _map.moveCamera(moveOptions);
+        },
         addMarker: function (markerOptions) {
           return _addMarker(_map, markerOptions);
         },
