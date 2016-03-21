@@ -154,7 +154,8 @@
             },
             destroy: function () {
               map.remove();
-            }
+            },
+            setClickable: map.setClickable
           };
 
           deferredCreation.resolve(mapApi);
